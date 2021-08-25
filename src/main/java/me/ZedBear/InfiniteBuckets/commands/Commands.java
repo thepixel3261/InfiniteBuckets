@@ -1,59 +1,48 @@
-package me.ZedBear.InfiniteBuckets;
+package me.ZedBear.InfiniteBuckets.commands;
 
-import net.milkbowl.vault.VaultEco;
+import me.ZedBear.InfiniteBuckets.Main;
 import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.economy.EconomyResponse;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.Locale;
+import java.text.DecimalFormat;
 
 public class Commands implements CommandExecutor {
 
-    public static Economy econ = null;
+    private final Main plugin;
 
-    public static Economy getEconomy() {
-        return econ;
+    public Commands(Main plugin) {
+        this.plugin = plugin;
     }
-
-    public static String lavacost() {
-        return Main.plugin.getConfig().getString("costs.lava");
-    }
-
-    public static String watercost() {
-        return Main.plugin.getConfig().getString("costs.water");
-    }
-
-    int waterc = Integer.parseInt(watercost());
-    int lavac = Integer.parseInt(lavacost());
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage("Only Players can use that Command!");
             return true;
         } else {
+
             Player player = (Player) sender;
-            Economy economy = Main.getEconomy();
+            Economy economy = plugin.getEconomy();
+            DecimalFormat formatter = new DecimalFormat("#,###");
+
             if (player.hasPermission("infbuckets.obtain")) {
                 if (cmd.getName().equalsIgnoreCase("infwater")) {
                     if (args.length == 0) {
                         //Player only typed '/infwater'
                         sender.sendMessage("");
                         sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "You are about to purchase an infinite water bucket");
-                        sender.sendMessage(ChatColor.GREEN + "This costs 100k. Type /infwater confirm to buy it.");
+                        sender.sendMessage(ChatColor.GREEN + "This costs " + formatter.format(plugin.getConfig().getInt("water.cost")) + ". Type /infwater confirm to buy it.");
                         sender.sendMessage("");
                     } else {
                         if (args.length == 1) {
                             if (args[0].equals("confirm")) {
-                                if (economy.getBalance(player) >= waterc) {
-                                    economy.withdrawPlayer(player, waterc);
+                                if (economy.getBalance(player) >= plugin.getConfig().getInt("water.cost")) {
+                                    economy.withdrawPlayer(player, plugin.getConfig().getInt("water.cost"));
                                     sender.sendMessage(ChatColor.GREEN + "You have bought an Infinite water bucket!");
-                                    player.getInventory().addItem(ItemManager.InfiniteWaterBucket);
+                                    player.getInventory().addItem(plugin.getItemManager().infiniteWaterBucket());
                                 } else {
                                     sender.sendMessage(ChatColor.GREEN + "You do not have enough money!");
                                 }
@@ -74,15 +63,15 @@ public class Commands implements CommandExecutor {
                         //Player only typed '/infwater'
                         sender.sendMessage("");
                         sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "You are about to purchase an infinite lava bucket");
-                        sender.sendMessage(ChatColor.GREEN + "This costs 100k. Type /inflava confirm to buy it.");
+                        sender.sendMessage(ChatColor.GREEN + "This costs " + formatter.format(plugin.getConfig().getInt("lava.cost")) + ". Type /inflava confirm to buy it.");
                         sender.sendMessage("");
                     } else {
                         if (args.length == 1) {
                             if (args[0].equals("confirm")) {
-                                if (economy.getBalance(player) >= lavac) {
-                                    economy.withdrawPlayer(player, lavac);
+                                if (economy.getBalance(player) >= plugin.getConfig().getInt("lava.cost")) {
+                                    economy.withdrawPlayer(player, plugin.getConfig().getInt("lava.cost"));
                                     sender.sendMessage(ChatColor.GREEN + "You have bought an Infinite Lava bucket!");
-                                    player.getInventory().addItem(ItemManager.InfiniteLavaBucket);
+                                    player.getInventory().addItem(plugin.getItemManager().infiniteLavaBucket());
                                 } else {
                                     sender.sendMessage(ChatColor.GREEN + "You do not have enough money!");
                                 }
@@ -107,7 +96,7 @@ public class Commands implements CommandExecutor {
                             //Player typed something more
                             if (args.length >= 1) {
                                 if (args[0].equals("reload")) {
-
+                                    plugin.reloadConfig();
                                     sender.sendMessage(ChatColor.GREEN + "Configuration Reloaded.");
                                 } else {
                                     sender.sendMessage(ChatColor.GREEN + "Configuration Reloaded.");

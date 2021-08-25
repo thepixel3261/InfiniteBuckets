@@ -1,41 +1,39 @@
 package me.ZedBear.InfiniteBuckets;
 
-import net.milkbowl.vault.chat.Chat;
+import me.ZedBear.InfiniteBuckets.commands.Commands;
+import me.ZedBear.InfiniteBuckets.item.ItemEvents;
+import me.ZedBear.InfiniteBuckets.item.ItemManager;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import net.milkbowl.vault.permission.Permission;
-
-import java.util.logging.Logger;
 
 public class Main extends JavaPlugin {
 
-    private static final Logger log = Logger.getLogger("Minecraft");
     public static Economy econ = null;
-    public static Permission perms = null;
-    public static Chat chat = null;
-    public FileConfiguration config = this.getConfig();
-    public static Main plugin;
+    public static Main instance;
 
-    @Override
+    private ItemManager itemManager;
+
     public void onEnable() {
-        ItemManager.init();
-        this.getCommand("infwater").setExecutor(new Commands());
-        this.getCommand("inflava").setExecutor(new Commands());
-        this.getCommand("infinitebuckets").setExecutor(new Commands());
-        getServer().getPluginManager().registerEvents(new ItemEvents(), this);
+        instance = this;
+
+        itemManager = new ItemManager(this);
+
+        this.getCommand("infwater").setExecutor(new Commands(this));
+        this.getCommand("inflava").setExecutor(new Commands(this));
+        this.getCommand("infinitebuckets").setExecutor(new Commands(this));
+
+        getServer().getPluginManager().registerEvents(new ItemEvents(this), this);
+
         if (!setupEconomy() ) {
-            log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+            getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
-        // Config Startup Logic
+        // Save default config
         this.saveDefaultConfig();
-        config.addDefault("costs.lava", 50000);
-        config.addDefault("costs.water", 50000);
-        plugin = this;
+
     }
 
     public void onDisable() {
@@ -51,18 +49,13 @@ public class Main extends JavaPlugin {
             return false;
         }
         econ = rsp.getProvider();
-        return econ != null;
+        return true;
     }
 
-    public static Economy getEconomy() {
+    public ItemManager getItemManager() {return itemManager;}
+
+    public Economy getEconomy() {
         return econ;
     }
 
-    public static Permission getPermissions() {
-        return perms;
-    }
-
-    public static Chat getChat() {
-        return chat;
-    }
 }

@@ -1,0 +1,17 @@
+name: InfiniteBuckets
+version: 1.0
+main: me.ZedBear.InfiniteBuckets.Main
+api-version: 1.17
+authors: [ ZedBear ]
+description: Infinite Water and Lava Buckets - Using Economy
+commands:
+  infwater:
+    description: Purchase Infinite Water
+    usage: /<command>
+  inflava:
+    description: Purchase Infinite Lava
+    usage: /<command>
+  infinitebuckets:
+    description: Commands to reload / gain a bucket!
+    usgae: /<command>
+    aliases: [ infbuckets, ib ]

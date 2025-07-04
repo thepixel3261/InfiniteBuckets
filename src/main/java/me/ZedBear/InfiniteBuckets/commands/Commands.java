@@ -34,7 +34,7 @@ public class Commands implements CommandExecutor {
                         //Player only typed '/infwater'
                         sender.sendMessage("");
                         sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "You are about to purchase an infinite water bucket");
-                        sender.sendMessage(ChatColor.GREEN + "This costs " + formatter.format(plugin.getConfig().getInt("water.cost")) + ". Type /infwater confirm to buy it.");
+                        sender.sendMessage(ChatColor.GREEN + "This costs " + formatter.format(plugin.getConfig().getInt("water.cost")) + "$. Type /infwater confirm to buy it.");
                         sender.sendMessage("");
                     } else {
                         if (args.length == 1) {
@@ -52,7 +52,7 @@ public class Commands implements CommandExecutor {
                             } else {
                                 sender.sendMessage("");
                                 sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "You are about to purchase an infinite water bucket");
-                                sender.sendMessage(ChatColor.GREEN + "This costs 100k. Type /infwater confirm to buy it.");
+                                sender.sendMessage(ChatColor.GREEN + "This costs " + formatter.format(plugin.getConfig().getInt("water.cost")) + "$. Type /infwater confirm to buy it.");
                                 sender.sendMessage("");
                             }
                         }
@@ -60,10 +60,10 @@ public class Commands implements CommandExecutor {
                 }
                 if (cmd.getName().equalsIgnoreCase("inflava")) {
                     if (args.length == 0) {
-                        //Player only typed '/infwater'
+                        //Player only typed '/inflava'
                         sender.sendMessage("");
                         sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "You are about to purchase an infinite lava bucket");
-                        sender.sendMessage(ChatColor.GREEN + "This costs " + formatter.format(plugin.getConfig().getInt("lava.cost")) + ". Type /inflava confirm to buy it.");
+                        sender.sendMessage(ChatColor.GREEN + "This costs " + formatter.format(plugin.getConfig().getInt("lava.cost")) + "$. Type /inflava confirm to buy it.");
                         sender.sendMessage("");
                     } else {
                         if (args.length == 1) {
@@ -81,7 +81,7 @@ public class Commands implements CommandExecutor {
                             } else {
                                 sender.sendMessage("");
                                 sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "You are about to purchase an infinite lava bucket");
-                                sender.sendMessage(ChatColor.GREEN + "This costs 100k. Type /inflava confirm to buy it.");
+                                sender.sendMessage(ChatColor.GREEN + "This costs " + formatter.format(plugin.getConfig().getInt("lava.cost")) + "$. Type /inflava confirm to buy it.");
                                 sender.sendMessage("");
                             }
                         }

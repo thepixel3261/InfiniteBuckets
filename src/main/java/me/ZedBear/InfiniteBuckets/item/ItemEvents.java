@@ -4,9 +4,12 @@ import me.ZedBear.InfiniteBuckets.Main;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +24,7 @@ public class ItemEvents implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGHEST)
     public void onBucketDrain(PlayerBucketEmptyEvent event) {
         Player player = event.getPlayer();
 
@@ -41,7 +44,11 @@ public class ItemEvents implements Listener {
         // infinite water
         if (container.get(infinite, PersistentDataType.INTEGER) == 0) {
             if (block.getBlockData() instanceof Waterlogged) {
-                ((Waterlogged) block.getBlockData()).setWaterlogged(true);
+                Waterlogged waterloggedData = (Waterlogged) block.getBlockData();
+                waterloggedData.setWaterlogged(true);
+                block.setBlockData(waterloggedData, true);
+
+                event.setCancelled(true);
                 return;
             }
 

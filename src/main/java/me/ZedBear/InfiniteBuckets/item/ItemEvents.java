@@ -34,7 +34,7 @@ public class ItemEvents implements Listener {
 
         Block block = event.getBlock();
 
-        ItemStack bucket = player.getInventory().getItemInMainHand();
+        ItemStack bucket = event.getItemStack();
 
         // no meta
         if (!bucket.hasItemMeta()) return;

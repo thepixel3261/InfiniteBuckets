@@ -1,9 +1,10 @@
 package me.ZedBear.InfiniteBuckets.item;
 
 import me.ZedBear.InfiniteBuckets.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,9 +25,7 @@ public class ItemEvents implements Listener {
     public void onBucketDrain(PlayerBucketEmptyEvent event) {
         Player player = event.getPlayer();
 
-        int x = event.getBlock().getX();
-        int y = event.getBlock().getY();
-        int z = event.getBlock().getZ();
+        Block block = event.getBlock();
 
         ItemStack bucket = player.getInventory().getItemInMainHand();
 
@@ -41,13 +40,19 @@ public class ItemEvents implements Listener {
 
         // infinite water
         if (container.get(infinite, PersistentDataType.INTEGER) == 0) {
-            player.getWorld().getBlockAt(x, y, z).setType(Material.WATER);
+            if (block.getBlockData() instanceof Waterlogged) {
+                ((Waterlogged) block.getBlockData()).setWaterlogged(true);
+                return;
+            }
+
+            block.setType(Material.WATER);
             event.setCancelled(true);
+            return;
         }
 
         // infinite lava
         if (container.get(infinite, PersistentDataType.INTEGER) == 1) {
-            player.getWorld().getBlockAt(x, y, z).setType(Material.LAVA);
+            block.setType(Material.LAVA);
             event.setCancelled(true);
         }
     }
